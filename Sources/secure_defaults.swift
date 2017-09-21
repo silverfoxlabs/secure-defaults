@@ -6,10 +6,10 @@ public enum EncryptionProviderError : Error {
     
     case failure(reason: String)
     case failedEncryption(reason: String)
-    case inputError
     case failedDecryption(reason : String)
     case couldNotRetrieveKey
     case couldNotDeleteKeys
+    case inputError
 }
 
 public protocol EncryptionProvider {

@@ -30,13 +30,45 @@ extension Prefs : PreferenceDomainType {
 
 let p = Prefs()
 
-//let provider = RSAEncryption<Prefs>()
-//try! provider.nuke()
-//var val = try! provider.encrypt(input: p)
-//p.save(encryptedPayload: val)
+///RSA Provider Encryption Example:
+let provider = RSAEncryption<Prefs>()
+do {
+    let val = try provider.encrypt(input: p)
+    p.save(encryptedPayload: val)
+}
+catch {
+    print(error.localizedDescription)
+}
 
-//let ecdsaProvider = ECDSAEncryption<Prefs>()
-//try! ecdsaProvider.nuke()
-//let _val = try! ecdsaProvider.encrypt(input: p)
-//p.save(encryptedPayload: _val)
+var payload = Prefs.encryptedPayload()
+
+do {
+    let result = try provider.decrypt(input: payload)
+    result.isUser //should be true
+}
+catch {
+    print(error.localizedDescription)
+}
+
+
+///ECDSA Provider Encryption Example:
+let ecProvider = ECDSAEncryption<Prefs>()
+
+do {
+    let val = try provider.encrypt(input: p)
+    p.save(encryptedPayload: val)
+}
+catch {
+    print(error.localizedDescription)
+}
+
+payload = Prefs.encryptedPayload()
+do {
+    let result = try provider.decrypt(input: payload)
+    result.isUser // should be true
+}
+catch {
+    print(error.localizedDescription)
+}
+
 
