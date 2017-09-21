@@ -104,7 +104,6 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
         let signedPayload = SecKeyCreateEncryptedData(keyPublic!, algorithm, data as CFData, &unsafe)
         
         if let errorStr = unsafe?.takeRetainedValue().localizedDescription {
-            
             throw EncryptionProviderError.failedEncryption(reason: errorStr)
         }
         
