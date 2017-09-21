@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66B53E341F72F3A600734E83 /* RSAEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B53E331F72F3A600734E83 /* RSAEncryption.swift */; };
+		66B53E361F72F3B500734E83 /* ECDSAEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B53E351F72F3B500734E83 /* ECDSAEncryption.swift */; };
 		OBJ_20 /* secure_defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* secure_defaults.swift */; };
 		OBJ_27 /* secure_defaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* secure_defaultsTests.swift */; };
 		OBJ_29 /* secure_defaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* secure_defaults.framework */; };
@@ -23,6 +25,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		66B53E331F72F3A600734E83 /* RSAEncryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAEncryption.swift; sourceTree = "<group>"; };
+		66B53E351F72F3B500734E83 /* ECDSAEncryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDSAEncryption.swift; sourceTree = "<group>"; };
 		OBJ_11 /* secure_defaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secure_defaultsTests.swift; sourceTree = "<group>"; };
 		OBJ_13 /* secure_defaults.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = secure_defaults.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_14 /* secure_defaultsTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; name = secure_defaultsTests.xctest; path = "secure-defaultsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_8 /* secure_defaults.swift */,
+				66B53E331F72F3A600734E83 /* RSAEncryption.swift */,
+				66B53E351F72F3B500734E83 /* ECDSAEncryption.swift */,
 			);
 			path = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -161,6 +167,8 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_20 /* secure_defaults.swift in Sources */,
+				66B53E341F72F3A600734E83 /* RSAEncryption.swift in Sources */,
+				66B53E361F72F3B500734E83 /* ECDSAEncryption.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
