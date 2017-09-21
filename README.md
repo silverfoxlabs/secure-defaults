@@ -47,7 +47,7 @@ There is even a ```nuke()``` function to wipe out all the keys data (if you need
 
 Using ```secure_defaults``` is comprised of the following steps:
 
-Step 1: Create your object conforming to ```PreferenceDomainType```
+Step 1: Create your object conforming to ```PreferenceDomainType```, and call ```register()```
 
 Step 2: Create a provider object, ```RSAEncryption``` / ```ECEncryption```
 
