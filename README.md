@@ -27,7 +27,7 @@ One option is to use the ```Keychain``` ; using the keychain for app settings ca
 #### How it works
 ---
 
-Using ```Asymmetric Encryption``` , ```secure_defaults``` creates an asymmetric key using one of the supported key types, and uses that key to encrypt your data.
+Using ```Asymmetric Encryption``` , ```secure_defaults``` creates an asymmetric key using one of the supported key types, and uses that key to encrypt your data using a symmetric encryption algorithm (for performance reasons, especially when working with blobs of data).
 
 ***Supports:***
 
