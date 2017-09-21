@@ -17,7 +17,7 @@ Secure your ```UserDefaults``` &  ```NSUserDefaults``` with encryption.
 #### Introduction
 ---
 
-Developers use the ```UserDefaults``` mechanism to store default values for their apps.  Generally, when you have sensitive information - storing in the ```UserDefaults``` is inheritly insecure.
+Developers use the ```UserDefaults``` mechanism to store default values for their apps.  Generally, when you have sensitive information - storing in the ```UserDefaults``` is inherently insecure.
 
 One option is to use the ```Keychain``` ; using the keychain for app settings can be a bit hacky (say vs. a password or some simple data you want to store).
 
