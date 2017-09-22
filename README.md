@@ -42,6 +42,34 @@ Leveraging ```Swift 4``` 's ```Codable``` protocol - create your object graph (a
 There is even a ```nuke()``` function to wipe out all the keys data (if you need to).
 
 ---
+### Installation:
+---
+
+#### Swift Package Manager:
+
+add to your ```Package.swift```:
+
+```swift
+dependencies: [
+   .Package(url: "https://github.com/dcilia/secure-defaults", majorVersion: 1, minor: 0)
+])
+```
+#### Carthage:
+
+Add to your ```Cartfile```
+
+```ruby 
+github "dcilia/swift-executor"
+```
+
+#### CocoaPods
+
+in your ```Podfile```:
+
+```ruby
+pod 'secure-defaults', :git=> 'https://github.com/dcilia/secure-defaults'
+```
+---
 #### Usage:
 ---
 
