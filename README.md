@@ -27,7 +27,7 @@ One option is to use the ```Keychain``` ; using the keychain for app settings ca
 #### How it works
 ---
 
-Using ```Asymmetric Encryption``` , ```secure_defaults``` creates an asymmetric key using one of the supported key types, and uses that key to encrypt your data using a symmetric encryption algorithm (for performance reasons, especially when working with blobs of data).
+Using ```Asymmetric Encryption``` , ```secure_defaults``` creates an asymmetric key using one of the supported key types to encrypt your data, however, it uses a function in the Security.framework that produces a symmetric key and encrypts with that (for performance reasons, especially when working with blobs of data).
 
 ***Supports:***
 
@@ -59,7 +59,7 @@ dependencies: [
 Add to your ```Cartfile```
 
 ```ruby 
-github "dcilia/swift-executor"
+github "dcilia/secure-defaults"
 ```
 
 #### CocoaPods
@@ -77,7 +77,7 @@ Using ```secure_defaults``` is comprised of the following steps:
 
 Step 1: Create your object conforming to ```PreferenceDomainType```, and call ```register()```
 
-Step 2: Create a provider object, ```RSAEncryption``` / ```ECEncryption```
+Step 2: Create a provider object, ```RSAEncryption``` / ```ECEncryption``` (for ECDSA secure enclave, set usesSecureEnclave to true)
 
 Step 3: Call the ```encrypt``` / ```decrypt``` functions
 
@@ -111,6 +111,7 @@ extension Prefs : PreferenceDomainType {
 }
 
 let p = Prefs()
+p.register()
 
 ///RSA Provider Encryption Example:
 let provider = RSAEncryption<Prefs>()
@@ -126,7 +127,6 @@ var payload = Prefs.encryptedPayload()
 
 do {
     let result = try provider.decrypt(input: payload)
-    result.isUser //should be true
 }
 catch {
     print(error.localizedDescription)
