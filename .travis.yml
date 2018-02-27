@@ -1,0 +1,25 @@
+language: swift
+osx_image: xcode9.3beta
+xcode_project: SecureDefaults.xcodeproj
+xcode_scheme: SecureDefaults
+xcode_sdk: macosx
+env:
+  global:
+  - REPO=dcilia/secure-defaults
+  - FRAMEWORK_NAME=SecureDefaults
+before_install:
+- brew update
+- brew install carthage
+before_script: 
+script:
+- carthage build --no-skip-current
+- carthage archive $FRAMEWORK_NAME
+deploy:
+  provider: releases
+  api_key:
+    secure: Lij9OCJmuSr0g0QnjQywu0GxTQDy1MkQxW6pc8EinU+AdGtXcz/YWVZwPhuCheANirBEMSGQ+i3XEIWyIjI2yGuw9EM7KKrvCfVLJHgiUvPv6T3uFsLZfet9Z93U5aPLuZ70RZmsQXrxmEgjrlIma8OAk9japrGpWsPtHtUm4k27TtMoSeuxehaq9Mj/IMr8N5ZwGLTHmLk+TF8j9/69RtoU2+2fupM/Zhq9w3eh3rBxXci/r85ORNUTSr4ewlvCDqXpHxZTMbDpQT/tN80B18l/xeYK/q/jS5hLc54PNM/Jm/EBXvRiw5UFwJK8ZZ/jLZWR08HQl2Jdo2ewDJN0RrEsLBlaEl3nxhdiiRcQmxZTdCww5oeEASY0OmO7TayXOZlsTuF1ykGdt//VNcmXrZ+qlg+cU8ULdIBYQd75r+FP+nbXFWdyQ23j/URMhX5QLHRyNCzuidvELCJ+rvbx13DUBmzFo2OFNswKnzwDYgn8gG20480wxJIZ6vsUyCdc4dM76TsRjHpQU+5B9S5fuVgAj5Rv1DYkVIffTb7tqkvbkK3/0yEKrLoZ5zj07vs0B0DU+4nuRDVMFP22DptcbCaFJuICypbNsvQUGT3FFbWxt3RL+kttx85PEe9m0PfgyxXhIollxKez1tsCfOD/5eWdWqyQBpW9IuGs8aMp1QE=
+  file: SecureDefaults.framework.zip
+  skip_cleanup: true
+  on:
+    repo: $REPO
+    tags: true

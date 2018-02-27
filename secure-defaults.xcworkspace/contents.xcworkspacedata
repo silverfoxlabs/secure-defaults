@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Playgrounds/secure-defaults.playground">
+      location = "group:SecureDefaults.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:secure-defaults.xcodeproj">
+      location = "group:Playgrounds/secure-defaults.playground">
    </FileRef>
 </Workspace>

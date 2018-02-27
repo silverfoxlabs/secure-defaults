@@ -4,7 +4,7 @@ import Cocoa
 
 var str = "Hello, playground"
 
-import secure_defaults
+import SecureDefaults
 
 class Prefs : Codable {
     

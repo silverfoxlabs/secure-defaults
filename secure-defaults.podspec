@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "secure-defaults"
-  s.version      = "1.0"
+  s.name         = "SecureDefaults"
+  s.version      = "1.1"
   s.summary      = "Secure your UserDefaults"
 
   # This description is used to generate tags and improve search results.

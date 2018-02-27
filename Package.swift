@@ -3,5 +3,5 @@
 import PackageDescription
 
 let package = Package(
-    name: "secure-defaults"
+    name: "SecureDefaults"
 )
