@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dcilia/secure-defaults.svg?branch=master)](https://travis-ci.org/dcilia/secure-defaults)
+
 # secure-defaults
 Secure your ```UserDefaults``` &  ```NSUserDefaults``` with encryption.
 
