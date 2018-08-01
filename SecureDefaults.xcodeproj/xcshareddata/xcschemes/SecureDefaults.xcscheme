@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SecureDefaults::secure-defaultsTests"
+               BuildableName = "secure-defaultsTests.xctest"
+               BlueprintName = "secure-defaultsTests"
+               ReferencedContainer = "container:SecureDefaults.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "SecureDefaults::SecureDefaults"
+            BuildableName = "SecureDefaults.framework"
+            BlueprintName = "SecureDefaults"
+            ReferencedContainer = "container:SecureDefaults.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

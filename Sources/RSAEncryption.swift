@@ -114,6 +114,11 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     
     public func decrypt(input: Base64EncodedStringType) throws -> T {
         
+        //TODO: REMOVE DEBUGGING
+        print(#function)
+        print(T.tag)
+        
+        
         //Retrieve the key from the keychain.
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -130,6 +135,7 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             //Use the result
             let key = item as! SecKey //private key
             guard let data = Data(base64Encoded: input) else {
+                
                 throw EncryptionProviderError.inputError
             }
             
@@ -149,7 +155,12 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             }
         }
         else {
-            throw EncryptionProviderError.failedDecryption(reason: "")
+            
+            if status == errSecItemNotFound {
+                throw EncryptionProviderError.failedDecryption(reason: "The item cannot be found.")
+            }
+            
+            throw EncryptionProviderError.failedDecryption(reason: "OSS : \(status)")
         }
     }
     
