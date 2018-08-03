@@ -21,7 +21,9 @@ public protocol EncryptionProvider {
     
     associatedtype Domain
     associatedtype EncryptedType
-    
+    associatedtype Algorithm
+
+    var algorithm : Algorithm { get set }
     var attributesPublic : [ String : Any] { get }
     var attributesPrivate : [String : Any] { get }
     func encrypt(input: Domain) throws -> EncryptedType

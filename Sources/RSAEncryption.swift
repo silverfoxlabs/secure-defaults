@@ -15,38 +15,49 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     public typealias Domain = T
     public typealias Base64EncodedStringType = String
     public typealias EncryptedType = Base64EncodedStringType
+    public typealias Algorithm = SecKeyAlgorithm
+
+    public var algorithm : SecKeyAlgorithm = .rsaEncryptionOAEPSHA512AESGCM
     
-    let algorithm : SecKeyAlgorithm = .rsaEncryptionOAEPSHA512AESGCM
-    
-    public init() {
-        
-    }
-    
+    public init() {}
+
+    /// Deletes Keys with the tag
+    ///
+    /// - Throws: A EncryptionProviderError
     public func nuke() throws -> Void {
+
+        guard let data = T.tag.data(using: .utf8) as CFData? else {
+            throw EncryptionProviderError.failure(reason: "Provider key tag could not be parsed")
+        }
         
         //Retrieve the key from the keychain.
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
-            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
+            kSecAttrApplicationTag as String: data,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
             kSecReturnAttributes as String : true,
-            kSecMatchLimit as String : kSecMatchLimitAll
+            kSecMatchLimit as String : kSecMatchLimitAll,
+            kSecAttrLabel as String : T.name
         ]
         
         var item: CFTypeRef?
+
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         
         if status != errSecSuccess {
             
             if status == errSecItemNotFound {
-                throw EncryptionProviderError.failure(reason: "Item not found.")
+                throw EncryptionProviderError.failedEncryption(reason: "Key was not found.")
             }
             
             throw EncryptionProviderError.couldNotRetrieveKey
         }
         
-        let tempResults = item as! CFArray
-        let results = tempResults as! Array<Dictionary<String,Any>>
+            let tempResults = item as! CFArray
+            guard let results = tempResults as? Array<Dictionary<String,Any>> else {
+                throw EncryptionProviderError.failure(reason: "Could not load any keys")
+        }
+
         for attributes in results {
             
             var copyAttr = attributes
@@ -60,13 +71,18 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     }
     
     public func encrypt(input: T) throws -> Base64EncodedStringType {
-        
+
+        guard let tagData = T.tag.data(using: .utf8) as CFData? else {
+            throw EncryptionProviderError.failure(reason: "Provider key tag could not be parsed")
+        }
+
         //Retrieve the key from the keychain.
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
-            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
+            kSecAttrApplicationTag as String: tagData,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecReturnRef as String: true
+            kSecReturnRef as String: true,
+            kSecAttrComment as String : "Created By SecureDefaults\n\(T.name)"
         ]
         
         var item: CFTypeRef?
@@ -79,12 +95,13 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             let key = item as! SecKey //private key
             keyPublic = SecKeyCopyPublicKey(key) //get the public key
         }
-        else {
+        else if status == errSecItemNotFound {
             //Create new key
             let attributes: [String: Any] =
                 [kSecAttrKeyType as String:            kSecAttrKeyTypeRSA,
                  kSecAttrKeySizeInBits as String:      2048,
                  kSecPrivateKeyAttrs as String: attributesPrivate,
+                 kSecAttrComment as String : "Created By SecureDefaults\n\(T.name)"
                  ]
             
             print(attributes.debugDescription)
@@ -94,6 +111,9 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 throw EncryptionProviderError.failedEncryption(reason: unsafe?.takeRetainedValue().localizedDescription ?? "No Error Provided")
             }
             keyPublic = SecKeyCopyPublicKey(privateKey)
+        }
+        else {
+            throw EncryptionProviderError.failedEncryption(reason: "OSStatus Error : \(status)")
         }
         
         
@@ -113,18 +133,14 @@ public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     }
     
     public func decrypt(input: Base64EncodedStringType) throws -> T {
-        
-        //TODO: REMOVE DEBUGGING
-        print(#function)
-        print(T.tag)
-        
-        
+
         //Retrieve the key from the keychain.
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecReturnRef as String: true
+            kSecReturnRef as String: true,
+            kSecAttrComment as String : "Created By SecureDefaults\n\(T.name)"
         ]
         
         var item: CFTypeRef?

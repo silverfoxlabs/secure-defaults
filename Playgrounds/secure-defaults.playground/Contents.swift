@@ -8,8 +8,8 @@ import SecureDefaults
 
 class Prefs : Codable {
     
-    var name : String = "Tom"
-    var last = "Beringer"
+    var name : String = "Luke"
+    var last = "Skywalker"
     var lastOpen = Date()
     var isUser = true
 }
@@ -63,6 +63,7 @@ catch {
 }
 
 payload = Prefs.encryptedPayload()
+
 do {
     let result = try provider.decrypt(input: payload)
     result.isUser // should be true

@@ -14,8 +14,9 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     
     public typealias Domain = T
     public typealias EncryptedType = String
+    public typealias Algorithm = SecKeyAlgorithm
     
-    let algorithm : SecKeyAlgorithm = .eciesEncryptionCofactorX963SHA256AESGCM
+    public var algorithm : Algorithm = .eciesEncryptionCofactorX963SHA256AESGCM
     public var useSecureEnclave = false
     
     public init() {
