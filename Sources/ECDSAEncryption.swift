@@ -10,7 +10,7 @@ import Security
 
 
 /// Encrypt using the Elliptical Curve cryptography
-public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
+public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvidable {
     
     public typealias Domain = T
     public typealias EncryptedType = String
@@ -46,7 +46,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             //Use the result
             let key = item as! SecKey //private key
             guard let publicKey = SecKeyCopyPublicKey(key) else {
-                throw EncryptionProviderError.failedEncryption(reason: "Could not copy the public key")
+                throw EncryptionProvidableError.failedEncryption(reason: "Could not copy the public key")
             } //get the public key
             
             keyPublic = publicKey
@@ -69,22 +69,22 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 
                 let status = SecKeyGeneratePair(attributes as CFDictionary, &publicKeyPtr, &privatekeyPtr)
                 if status != errSecSuccess {
-                    throw EncryptionProviderError.failedEncryption(reason: "Could not generate EC keys using the Secure Enclave")
+                    throw EncryptionProvidableError.failedEncryption(reason: "Could not generate EC keys using the Secure Enclave")
                 }
                 
                 guard let key = publicKeyPtr else {
-                    throw EncryptionProviderError.failedEncryption(reason: "SecKeyGeneratePair did not return a public key for the EC key generation with the Secure Enclave.")
+                    throw EncryptionProvidableError.failedEncryption(reason: "SecKeyGeneratePair did not return a public key for the EC key generation with the Secure Enclave.")
                 }
                 
                 keyPublic = key
             }
             else {
                 guard let privateKey : SecKey = SecKeyCreateRandomKey(attributes as CFDictionary, &errorPtr) else {
-                    throw EncryptionProviderError.failedEncryption(reason: errorPtr?.takeRetainedValue().localizedDescription ?? "No Error")
+                    throw EncryptionProvidableError.failedEncryption(reason: errorPtr?.takeRetainedValue().localizedDescription ?? "No Error")
                 }
                 
                 guard let key = SecKeyCopyPublicKey(privateKey) else {
-                    throw EncryptionProviderError.failedEncryption(reason: "Could not get public key.")
+                    throw EncryptionProvidableError.failedEncryption(reason: "Could not get public key.")
                 }
                 
                 keyPublic = key
@@ -100,7 +100,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
         
         if let errorStr = errorPtr?.takeRetainedValue().localizedDescription {
             
-            throw EncryptionProviderError.failedEncryption(reason: errorStr)
+            throw EncryptionProvidableError.failedEncryption(reason: errorStr)
         }
         
         let payload = signedPayload as Data?
@@ -140,10 +140,10 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
         if status != errSecSuccess {
             
             if status == errSecItemNotFound {
-                throw EncryptionProviderError.failure(reason: "Item not found.")
+                throw EncryptionProvidableError.failure(reason: "Item not found.")
             }
             
-            throw EncryptionProviderError.couldNotRetrieveKey
+            throw EncryptionProvidableError.couldNotRetrieveKey
         }
         
         let tempResults = item as! CFArray
@@ -161,14 +161,14 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 
                 let res = SecItemDelete(query as CFDictionary)
                 if res != errSecSuccess {
-                    throw EncryptionProviderError.couldNotDeleteKeys
+                    throw EncryptionProvidableError.couldNotDeleteKeys
                 }
             }
             else {
              
                 let res = SecItemDelete(copyAttr as CFDictionary)
                 if res != errSecSuccess {
-                    throw EncryptionProviderError.couldNotDeleteKeys
+                    throw EncryptionProvidableError.couldNotDeleteKeys
                 }
             }
         }
@@ -195,12 +195,12 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             //Use the result
             let key = item as! SecKey //private key
             guard let data = Data(base64Encoded: input) else {
-                throw EncryptionProviderError.inputError
+                throw EncryptionProvidableError.inputError
             }
             
             var error : Unmanaged<CFError>?
             guard let result = SecKeyCreateDecryptedData(key, algorithm, data as CFData, &error) else {
-                throw EncryptionProviderError.failedDecryption(reason: "\(error?.takeRetainedValue().localizedDescription ?? "No Error")")
+                throw EncryptionProvidableError.failedDecryption(reason: "\(error?.takeRetainedValue().localizedDescription ?? "No Error")")
             }
             
             let decoder = PropertyListDecoder()
@@ -210,11 +210,11 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 return retVal
             }
             catch {
-                throw EncryptionProviderError.failedDecryption(reason: error.localizedDescription)
+                throw EncryptionProvidableError.failedDecryption(reason: error.localizedDescription)
             }
         }
         else {
-            throw EncryptionProviderError.failedDecryption(reason: "")
+            throw EncryptionProvidableError.failedDecryption(reason: "")
         }
     }
 }

@@ -22,7 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		DD675B0C2111CA5D00BA6759 /* PreferenceDomainType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD675B0B2111CA5D00BA6759 /* PreferenceDomainType.swift */; };
-		DD675B0E2111CA7000BA6759 /* EncryptionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD675B0D2111CA7000BA6759 /* EncryptionProvider.swift */; };
+		DD675B0E2111CA7000BA6759 /* EncryptionProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD675B0D2111CA7000BA6759 /* EncryptionProvidable.swift */; };
 		OBJ_24 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_30 /* secure_defaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* secure_defaultsTests.swift */; };
 		OBJ_37 /* ECDSAEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* ECDSAEncryption.swift */; };
@@ -41,7 +41,7 @@
 
 /* Begin PBXFileReference section */
 		DD675B0B2111CA5D00BA6759 /* PreferenceDomainType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceDomainType.swift; sourceTree = "<group>"; };
-		DD675B0D2111CA7000BA6759 /* EncryptionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProvider.swift; sourceTree = "<group>"; };
+		DD675B0D2111CA7000BA6759 /* EncryptionProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProvidable.swift; sourceTree = "<group>"; };
 		OBJ_13 /* secure_defaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secure_defaultsTests.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Playgrounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Playgrounds; sourceTree = SOURCE_ROOT; };
 		OBJ_15 /* secure-defaults.xcworkspace */ = {isa = PBXFileReference; lastKnownFileType = wrapper.workspace; path = "secure-defaults.xcworkspace"; sourceTree = SOURCE_ROOT; };
@@ -114,7 +114,7 @@
 				OBJ_8 /* ECDSAEncryption.swift */,
 				OBJ_9 /* RSAEncryption.swift */,
 				DD675B0B2111CA5D00BA6759 /* PreferenceDomainType.swift */,
-				DD675B0D2111CA7000BA6759 /* EncryptionProvider.swift */,
+				DD675B0D2111CA7000BA6759 /* EncryptionProvidable.swift */,
 			);
 			path = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -227,7 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				DD675B0E2111CA7000BA6759 /* EncryptionProvider.swift in Sources */,
+				DD675B0E2111CA7000BA6759 /* EncryptionProvidable.swift in Sources */,
 				OBJ_37 /* ECDSAEncryption.swift in Sources */,
 				OBJ_38 /* RSAEncryption.swift in Sources */,
 				DD675B0C2111CA5D00BA6759 /* PreferenceDomainType.swift in Sources */,

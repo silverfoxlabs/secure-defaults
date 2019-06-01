@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum EncryptionProviderError : Error {
+public enum EncryptionProvidableError : Error {
     
     case failure(reason: String)
     case failedEncryption(reason: String)
@@ -17,7 +17,7 @@ public enum EncryptionProviderError : Error {
     case inputError
 }
 
-public protocol EncryptionProvider {
+public protocol EncryptionProvidable {
     
     associatedtype Domain
     associatedtype EncryptedType
@@ -29,5 +29,5 @@ public protocol EncryptionProvider {
     func encrypt(input: Domain) throws -> EncryptedType
     func decrypt(input: EncryptedType) throws -> Domain
     func nuke() throws -> Void
-    
 }
+

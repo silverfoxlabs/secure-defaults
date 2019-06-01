@@ -31,7 +31,7 @@ public protocol PreferenceDomainType : Codable {
     /// - Note: The default implementation retrieves the payload from the suite
     /// using the key.
     /// - Returns: A String value representing the encrypted payload.
-    static func encryptedPayload() -> String
+    static func encryptedPayload() throws -> String
 }
 
 public extension PreferenceDomainType {
@@ -49,8 +49,16 @@ public extension PreferenceDomainType {
         UserDefaults.standard.synchronize()
     }
     
-    static func encryptedPayload() -> String {
+    static func encryptedPayload() throws -> String {
         let suite = UserDefaults(suiteName: Self.name)
-        return suite?.string(forKey: Self.key) ?? ""
+        guard let result = suite?.string(forKey: Self.key) else {
+            throw PreferenceDomainError.couldNotRetrieveEncryptionPayload
+        }
+
+        return result
     }
+}
+
+enum PreferenceDomainError : Error {
+    case couldNotRetrieveEncryptionPayload
 }
