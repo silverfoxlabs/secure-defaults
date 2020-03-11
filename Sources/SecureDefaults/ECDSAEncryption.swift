@@ -12,47 +12,66 @@ import Security
 
 /// Encrypt using the Elliptical Curve cryptography
 public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider where T: Codable {
-    
-    public typealias Domain = T
-    public typealias EncryptedType = String
-    
-    let algorithm : SecKeyAlgorithm = .eciesEncryptionCofactorX963SHA256AESGCM
-    public var useSecureEnclave = false
-    
-    public init() {
         
-    }
+    let algorithm : SecKeyAlgorithm
+    public var useSecureEnclave: Bool
     
-    public func encrypt(input: T) throws -> String {
-        
-        //Retrieve the key from the keychain.
-        var query: [String: Any] = [
+    private let encryptQuery: [String: Any] = {
+        return [
             kSecClass as String: kSecClassKey,
             kSecAttrApplicationTag as String: T.tag,
             kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
             kSecReturnRef as String: true
         ]
+    }()
+    
+    private let fetchQuery: [String: Any] = {
+        return [
+            kSecClass as String: kSecClassKey,
+            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
+            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecReturnRef as String: true
+        ]
+    }()
+    
+    private let nukeQuery: [String: Any] = {
+        return [
+            kSecClass as String: kSecClassKey,
+            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
+            kSecAttrKeyType as String: kSecAttrKeyTypeEC,
+            kSecReturnAttributes as String : true,
+            kSecMatchLimit as String : kSecMatchLimitAll
+        ]
+    }()
+    
+    
+    public init(algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorX963SHA256AESGCM, useSecureEnclave: Bool = false) {
+        self.algorithm = algorithm
+        self.useSecureEnclave = useSecureEnclave
+    }
+    
+    public func encrypt(data input: T) throws -> String {
+        
+        var query = encryptQuery
         
         if useSecureEnclave == true {
             query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
         }
         
         var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        let status = SecItemCopyMatching(encryptQuery as CFDictionary, &item)
         var keyPublic : SecKey
         
-        if status == errSecSuccess {
-            
-            //Use the result
+        switch status {
+        case errSecSuccess:
             let key = item as! SecKey //private key
             guard let publicKey = SecKeyCopyPublicKey(key) else {
                 throw EncryptionProviderError.failedEncryption(reason: Reasons.couldNotCopyPublicKey)
             } //get the public key
             
             keyPublic = publicKey
-        }
-        else {
-            //Create new key
+            break
+        default:
             var attributes: [String: Any] = [
                 kSecAttrKeyType as String:            kSecAttrKeyTypeECSECPrimeRandom,
                 kSecAttrKeySizeInBits as String:      256,
@@ -89,12 +108,21 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider whe
                 
                 keyPublic = key
             }
+            break
         }
-        
         
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .xml
-        let data = try! encoder.encode(input)
+        
+        let data: Data
+
+        do {
+            data = try encoder.encode(input)
+        }
+        catch {
+            throw EncryptionProviderError.failedEncryption(reason: error.localizedDescription)
+        }
+
         var errorPtr : Unmanaged<CFError>?
         let signedPayload = SecKeyCreateEncryptedData(keyPublic, algorithm, data as CFData, &errorPtr)
         
@@ -103,8 +131,10 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider whe
             throw EncryptionProviderError.failedEncryption(reason: errorStr)
         }
         
-        let payload = signedPayload as Data?
-        let toSave = payload?.base64EncodedString() ?? ""
+        guard let payload = signedPayload as Data? else {
+            throw EncryptionProviderError.failedEncryption(reason: "payload data is nil.")
+        }
+        let toSave = payload.base64EncodedString()
         return toSave
     }
     
@@ -121,14 +151,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider whe
     
     public func nuke() throws -> Void {
         
-        //Retrieve the key from the keychain.
-        var query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
-            kSecAttrKeyType as String: kSecAttrKeyTypeEC,
-            kSecReturnAttributes as String : true,
-            kSecMatchLimit as String : kSecMatchLimitAll
-        ]
+        var query = nukeQuery
         
         if useSecureEnclave == true {
             query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
@@ -137,18 +160,17 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider whe
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         
-        if status != errSecSuccess {
-            
-            if status == errSecItemNotFound {
-                throw EncryptionProviderError.failure(reason: "Item not found.")
-            }
-            
+        switch status {
+        case errSecSuccess:
+            break
+        case errSecItemNotFound:
+            throw EncryptionProviderError.failure(reason: "Item not found.")
+        default:
             throw EncryptionProviderError.couldNotRetrieveKey
         }
         
         let tempResults = item as! CFArray
         let results = tempResults as! Array<Dictionary<String,Any>>
-        
         
         for attributes in results {
             
@@ -174,15 +196,9 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider whe
         }
     }
     
-    public func decrypt(input: String) throws -> T {
+    public func decrypt(data input: String) throws -> T {
 
-        //Retrieve the key from the keychain.
-        var query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
-            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-            kSecReturnRef as String: true
-        ]
+        var query = fetchQuery
         
         if useSecureEnclave == true {
             query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave

@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		DD3A709024194CE000E88064 /* EncryptionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3A708F24194CE000E88064 /* EncryptionProvider.swift */; };
+		DD3A709224194D0200E88064 /* EncryptionProviderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3A709124194D0200E88064 /* EncryptionProviderError.swift */; };
+		DD3A709424194D4B00E88064 /* PreferenceDomainType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3A709324194D4B00E88064 /* PreferenceDomainType.swift */; };
 		OBJ_28 /* ECDSAEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* ECDSAEncryption.swift */; };
 		OBJ_29 /* RSAEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* RSAEncryption.swift */; };
 		OBJ_30 /* secure_defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* secure_defaults.swift */; };
@@ -30,14 +33,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		66FEAD352417AADC00332EC4 /* PBXContainerItemProxy */ = {
+		DD3A708D241949B300E88064 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "SecureDefaults::SecureDefaults";
 			remoteInfo = SecureDefaults;
 		};
-		66FEAD362417AADC00332EC4 /* PBXContainerItemProxy */ = {
+		DD3A708E241949B300E88064 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
@@ -47,6 +50,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DD3A708F24194CE000E88064 /* EncryptionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProvider.swift; sourceTree = "<group>"; };
+		DD3A709124194D0200E88064 /* EncryptionProviderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProviderError.swift; sourceTree = "<group>"; };
+		DD3A709324194D4B00E88064 /* PreferenceDomainType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceDomainType.swift; sourceTree = "<group>"; };
 		OBJ_10 /* RSAEncryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAEncryption.swift; sourceTree = "<group>"; };
 		OBJ_11 /* secure_defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secure_defaults.swift; sourceTree = "<group>"; };
 		OBJ_14 /* secure_defaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secure_defaultsTests.swift; sourceTree = "<group>"; };
@@ -136,6 +142,9 @@
 				OBJ_9 /* ECDSAEncryption.swift */,
 				OBJ_10 /* RSAEncryption.swift */,
 				OBJ_11 /* secure_defaults.swift */,
+				DD3A709324194D4B00E88064 /* PreferenceDomainType.swift */,
+				DD3A709124194D0200E88064 /* EncryptionProviderError.swift */,
+				DD3A708F24194CE000E88064 /* EncryptionProvider.swift */,
 			);
 			name = SecureDefaults;
 			path = Sources/SecureDefaults;
@@ -225,7 +234,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				DD3A709424194D4B00E88064 /* PreferenceDomainType.swift in Sources */,
 				OBJ_28 /* ECDSAEncryption.swift in Sources */,
+				DD3A709024194CE000E88064 /* EncryptionProvider.swift in Sources */,
+				DD3A709224194D0200E88064 /* EncryptionProviderError.swift in Sources */,
 				OBJ_29 /* RSAEncryption.swift in Sources */,
 				OBJ_30 /* secure_defaults.swift in Sources */,
 			);
@@ -253,12 +265,12 @@
 		OBJ_42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "SecureDefaults::SecureDefaultsTests" /* SecureDefaultsTests */;
-			targetProxy = 66FEAD362417AADC00332EC4 /* PBXContainerItemProxy */;
+			targetProxy = DD3A708E241949B300E88064 /* PBXContainerItemProxy */;
 		};
 		OBJ_51 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "SecureDefaults::SecureDefaults" /* SecureDefaults */;
-			targetProxy = 66FEAD352417AADC00332EC4 /* PBXContainerItemProxy */;
+			targetProxy = DD3A708D241949B300E88064 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

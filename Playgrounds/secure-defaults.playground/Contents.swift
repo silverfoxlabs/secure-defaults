@@ -1,10 +1,7 @@
 //: Playground - noun: a place where people can play
 
-import Cocoa
-
-var str = "Hello, playground"
-
 import SecureDefaults
+import Foundation
 
 class Settings : Codable {
     
@@ -15,6 +12,9 @@ class Settings : Codable {
 }
 
 extension Settings : PreferenceDomainType {
+    
+    typealias EncryptedData = String
+    
     static var key: String {
         return "settings"
     }
@@ -28,22 +28,24 @@ extension Settings : PreferenceDomainType {
     }
 }
 
+
 let p = Settings()
 
 ///RSA Provider Encryption Example:
 let provider = RSAEncryption<Settings>()
 do {
-    let val = try provider.encrypt(input: p)
-    p.save(encryptedPayload: val)
+    let val = try provider.encrypt(data: p)
+    try p.save(encrypted: val)
 }
 catch {
     print(error.localizedDescription)
 }
 
-var payload = Settings.encryptedPayload()
+var payload: String
 
 do {
-    let result = try provider.decrypt(input: payload)
+    payload = try Settings.encryptedData()
+    let result = try provider.decrypt(data: payload)
     result.isUser //should be true
 }
 catch {
@@ -55,16 +57,16 @@ catch {
 let ecProvider = ECDSAEncryption<Settings>()
 
 do {
-    let val = try provider.encrypt(input: p)
-    p.save(encryptedPayload: val)
+    let val = try provider.encrypt(data: p)
+    try p.save(encrypted: val)
 }
 catch {
     print(error.localizedDescription)
 }
 
-payload = Settings.encryptedPayload()
 do {
-    let result = try provider.decrypt(input: payload)
+    payload = try Settings.encryptedData()
+    let result = try provider.decrypt(data: payload)
     result.isUser // should be true
 }
 catch {
