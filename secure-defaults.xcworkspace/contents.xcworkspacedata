@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Playgrounds">
+   </FileRef>
+   <FileRef
       location = "group:SecureDefaults.xcodeproj">
    </FileRef>
    <FileRef

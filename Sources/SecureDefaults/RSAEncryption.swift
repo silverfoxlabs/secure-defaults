@@ -10,7 +10,7 @@ import Security
 
 
 /// Encrypt using RSA cryptography
-public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
+public struct RSAEncryption<T : PreferenceDomainType> : EncryptionProvider where T: Codable {
     
     public typealias Domain = T
     public typealias Base64EncodedStringType = String

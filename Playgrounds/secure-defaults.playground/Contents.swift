@@ -6,7 +6,7 @@ var str = "Hello, playground"
 
 import SecureDefaults
 
-class Prefs : Codable {
+class Settings : Codable {
     
     var name : String = "Tom"
     var last = "Beringer"
@@ -14,24 +14,24 @@ class Prefs : Codable {
     var isUser = true
 }
 
-extension Prefs : PreferenceDomainType {
+extension Settings : PreferenceDomainType {
     static var key: String {
         return "settings"
     }
     
     static var name: String {
-        return "Test Key Can Delete"
+        return "appSettings"
     }
     
     static var tag: String {
-        return "preferences.com.tags"
+        return "com.app.\(key)"
     }
 }
 
-let p = Prefs()
+let p = Settings()
 
 ///RSA Provider Encryption Example:
-let provider = RSAEncryption<Prefs>()
+let provider = RSAEncryption<Settings>()
 do {
     let val = try provider.encrypt(input: p)
     p.save(encryptedPayload: val)
@@ -40,7 +40,7 @@ catch {
     print(error.localizedDescription)
 }
 
-var payload = Prefs.encryptedPayload()
+var payload = Settings.encryptedPayload()
 
 do {
     let result = try provider.decrypt(input: payload)
@@ -52,7 +52,7 @@ catch {
 
 
 ///ECDSA Provider Encryption Example:
-let ecProvider = ECDSAEncryption<Prefs>()
+let ecProvider = ECDSAEncryption<Settings>()
 
 do {
     let val = try provider.encrypt(input: p)
@@ -62,7 +62,7 @@ catch {
     print(error.localizedDescription)
 }
 
-payload = Prefs.encryptedPayload()
+payload = Settings.encryptedPayload()
 do {
     let result = try provider.decrypt(input: payload)
     result.isUser // should be true

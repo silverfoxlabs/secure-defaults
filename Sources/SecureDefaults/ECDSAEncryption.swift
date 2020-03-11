@@ -9,8 +9,9 @@ import Foundation
 import Security
 
 
+
 /// Encrypt using the Elliptical Curve cryptography
-public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
+public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider where T: Codable {
     
     public typealias Domain = T
     public typealias EncryptedType = String
@@ -45,7 +46,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             //Use the result
             let key = item as! SecKey //private key
             guard let publicKey = SecKeyCopyPublicKey(key) else {
-                throw EncryptionProviderError.failedEncryption(reason: "Could not copy the public key")
+                throw EncryptionProviderError.failedEncryption(reason: Reasons.couldNotCopyPublicKey)
             } //get the public key
             
             keyPublic = publicKey
@@ -68,11 +69,11 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 
                 let status = SecKeyGeneratePair(attributes as CFDictionary, &publicKeyPtr, &privatekeyPtr)
                 if status != errSecSuccess {
-                    throw EncryptionProviderError.failedEncryption(reason: "Could not generate EC keys using the Secure Enclave")
+                    throw EncryptionProviderError.failedEncryption(reason: Reasons.couldNotCopySecureEnclave)
                 }
                 
                 guard let key = publicKeyPtr else {
-                    throw EncryptionProviderError.failedEncryption(reason: "SecKeyGeneratePair did not return a public key for the EC key generation with the Secure Enclave.")
+                    throw EncryptionProviderError.failedEncryption(reason: Reasons.failedEncryption)
                 }
                 
                 keyPublic = key
@@ -83,7 +84,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
                 }
                 
                 guard let key = SecKeyCopyPublicKey(privateKey) else {
-                    throw EncryptionProviderError.failedEncryption(reason: "Could not get public key.")
+                    throw EncryptionProviderError.failedEncryption(reason: Reasons.failGetPublicKey)
                 }
                 
                 keyPublic = key
@@ -174,6 +175,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
     }
     
     public func decrypt(input: String) throws -> T {
+
         //Retrieve the key from the keychain.
         var query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -213,7 +215,7 @@ public struct ECDSAEncryption<T : PreferenceDomainType> : EncryptionProvider {
             }
         }
         else {
-            throw EncryptionProviderError.failedDecryption(reason: "")
+            throw EncryptionProviderError.failedDecryption(reason: Reasons.unknownError)
         }
     }
 }

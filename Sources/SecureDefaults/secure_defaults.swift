@@ -2,6 +2,15 @@
 import Foundation
 import Security
 
+
+public struct Reasons {
+    static let couldNotCopyPublicKey = "Could not copy the public key"
+    static let couldNotCopySecureEnclave = "Could not generate EC keys using the Secure Enclave"
+    static let failedEncryption = "SecKeyGeneratePair did not return a public key for the EC key generation with the Secure Enclave."
+    static let failGetPublicKey = "Could not get public key."
+    static let unknownError = "Unknown Error"
+}
+
 public enum EncryptionProviderError : Error {
     
     case failure(reason: String)
@@ -25,7 +34,7 @@ public protocol EncryptionProvider {
 
 }
 
-public protocol PreferenceDomainType : Codable {
+public protocol PreferenceDomainType {
     /// The name of your PreferenceDomainType
     /// - Note: Generally you will want to use a
     /// a reverse domain style string.  This value
@@ -52,8 +61,8 @@ public protocol PreferenceDomainType : Codable {
     static func encryptedPayload() -> String
 }
 
-public extension PreferenceDomainType {
-    
+public extension PreferenceDomainType where Self : Codable {
+
     func register() -> Void {
         UserDefaults.standard.addSuite(named: Self.name)
         let suite = UserDefaults(suiteName: Self.name)
@@ -70,6 +79,19 @@ public extension PreferenceDomainType {
     static func encryptedPayload() -> String {
         let suite = UserDefaults(suiteName: Self.name)
         return suite?.string(forKey: Self.key) ?? ""
+
+    }
+
+    typealias RawData = String
+    static func fetch() throws -> RawData {
+
+        guard let suite = UserDefaults(suiteName: Self.name) else {
+            throw EncryptionProviderError.failedDecryption(reason: "Could Not Do it")
+        }
+
+        guard let data = suite.string(forKey: Self.key) else {
+            
+        }
     }
 }
 
