@@ -28,9 +28,10 @@ extension Settings : PreferenceDomainType {
     }
 }
 
+
 let p = Settings()
 
-let provider = UserDefaultsEncryption<Settings>(.rsa(SecKeyAlgorithm.rsaSignatureDigestPSSSHA512))
+let provider = UserDefaultsEncryption<Settings>(.ecdsa(.eciesEncryptionCofactorX963SHA256AESGCM))
 
 do {
     let val = try provider.encrypt(data: p)
@@ -39,50 +40,4 @@ do {
 catch {
     print(error)
 }
-
-
-//let p = Settings()
-//
-/////RSA Provider Encryption Example:
-//let provider = RSAEncryption<Settings>()
-//do {
-//    let val = try provider.encrypt(data: p)
-//    try p.save(encrypted: val)
-//}
-//catch {
-//    print(error.localizedDescription)
-//}
-//
-//var payload: String
-//
-//do {
-//    payload = try Settings.encryptedData()
-//    let result = try provider.decrypt(data: payload)
-//    result.isUser //should be true
-//}
-//catch {
-//    print(error.localizedDescription)
-//}
-//
-//
-/////ECDSA Provider Encryption Example:
-//let ecProvider = ECDSAEncryption<Settings>(algorithm: SecKeyAlgorithm.ecdsaSignatureDigestX962SHA512, useSecureEnclave: false)
-//
-//do {
-//    let val = try provider.encrypt(data: p)
-//    try p.save(encrypted: val)
-//}
-//catch {
-//    print(error.localizedDescription)
-//}
-//
-//do {
-//    payload = try Settings.encryptedData()
-//    let result = try provider.decrypt(data: payload)
-//    result.isUser // should be true
-//}
-//catch {
-//    print(error.localizedDescription)
-//}
-
-
+ 

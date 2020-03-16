@@ -21,7 +21,7 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrApplicationTag as String: T.tag.data(using: .utf8)! as CFData,
-            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyType as String: keyType.values().0,
             kSecReturnAttributes as String : true,
             kSecMatchLimit as String : kSecMatchLimitAll
         ]
@@ -73,6 +73,7 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
         }
 
         var unsafe : Unmanaged<CFError>?
+//        let signedPayload = SecKeyCreateSignature(key, .rsaSignatureDigestPSSSHA512, data as CFData, &unsafe)
         let signedPayload = SecKeyCreateEncryptedData(key,
                                                       keyType.values().1,
                                                       data as CFData,
@@ -96,7 +97,7 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
     public func decrypt(data input: String) throws -> T {
 
         let key = try KeyMaker.fetchPublicKey(tag: T.tag,
-                                              type: kSecAttrKeyTypeRSA,
+                                              type: keyType.values().0,
                                               name: T.name)
         let data = input.data(using: .utf8)!
 
