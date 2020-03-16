@@ -1,10 +1,12 @@
 import XCTest
 import Security
-@testable import secure_defaults
+@testable import SecureDefaults
 
-struct TestMock : PreferenceDomainType {
+struct TestMock : PreferenceDomainType, Codable {
+    typealias EncryptedData = String
+
     static var name: String {
-        return "com.silverfox.secure_defaults.testMock"
+        return "com.silverfox.secureDefaults.testMock"
     }
     
     static var key: String {
@@ -15,7 +17,7 @@ struct TestMock : PreferenceDomainType {
         return "com.silverfox.secure_defaults.encryptionKey"
     }
     
-    var name : String = ""
+    var name : String = "SilverFoxLabsTestKey"
     var age : Int = 0
     var rememberMe = false
 }
@@ -24,8 +26,8 @@ class secure_defaultsTests: XCTestCase {
     
     var didRegisterMock = false
     
-    var rsaProvider = RSAEncryption<TestMock>()
-    var ecProvider = ECDSAEncryption<TestMock>()
+    var rsaProvider = UserDefaultsEncryption<TestMock>( EncryptionType.rsa(.rsaSignatureDigestPSSSHA512))
+    var ecProvider = UserDefaultsEncryption<TestMock>(EncryptionType.ecdsa(.ecdsaSignatureDigestX962SHA512))
     
     var encryptedRSAPayload = ""
     var encryptedECDSAPayload = ""
@@ -35,14 +37,9 @@ class secure_defaultsTests: XCTestCase {
         super.setUp()
         
         if didRegisterMock == false {
-            TestMock().register()
+            try? TestMock().register()
             didRegisterMock = true
-            
-            //get and unlock the Keychain
-            
         }
-        
-        
     }
     
     override func tearDown() {
@@ -50,12 +47,10 @@ class secure_defaultsTests: XCTestCase {
         
         do {
             try rsaProvider.nuke()
-            ecProvider.useSecureEnclave = false
-            try ecProvider.nuke()
-            ecProvider.useSecureEnclave = true
             try ecProvider.nuke()
         }
         catch {
+            XCTAssertFalse(true)
             print(error.localizedDescription)
         }
     }
@@ -63,46 +58,30 @@ class secure_defaultsTests: XCTestCase {
     func testThatCanEncrypt() -> Void {
         
         let mock = TestMock(name: "Luke Skywalker", age: 35, rememberMe: true)
-        let rsaProvider = RSAEncryption<TestMock>()
+        let rsaProvider = UserDefaultsEncryption<TestMock>(.rsa(.rsaSignatureDigestPSSSHA512))
         
         do {
-            let result = try rsaProvider.encrypt(input: mock)
-            mock.save(encryptedPayload: result)
-            encryptedRSAPayload = TestMock.encryptedPayload()
+            let result = try rsaProvider.encrypt(data: mock)
+            try mock.save(encrypted: result)
+            encryptedRSAPayload = try TestMock.encryptedData()
             XCTAssertTrue(encryptedRSAPayload.isEmpty == false)
         }
         catch {
             XCTAssertFalse(true)
         }
         
-        let ecProvider = ECDSAEncryption<TestMock>()
+        let ecProvider = UserDefaultsEncryption<TestMock>(.ecdsa(.ecdsaSignatureDigestX962SHA512))
         
         do {
-            let result = try ecProvider.encrypt(input: mock)
-            mock.save(encryptedPayload: result)
-            encryptedECDSAPayload = TestMock.encryptedPayload()
+            let result = try ecProvider.encrypt(data: mock)
+            try mock.save(encrypted: result)
+            encryptedECDSAPayload = try TestMock.encryptedData()
             XCTAssertTrue(encryptedECDSAPayload.isEmpty == false)
         }
         catch {
             XCTAssertFalse(true)
         }
         
-    }
-    
-    func testThatCanEncryptWithSecureEnclave() -> Void {
-        let mock = TestMock(name: "Leia Organa", age: 25, rememberMe: true)
-        var ecProvider = ECDSAEncryption<TestMock>()
-        ecProvider.useSecureEnclave = true
-        
-        do {
-            let result = try ecProvider.encrypt(input: mock)
-            mock.save(encryptedPayload: result)
-            encryptedSecureEnclavePayload = TestMock.encryptedPayload()
-            XCTAssertTrue(encryptedSecureEnclavePayload.isEmpty == false)
-        }
-        catch {
-            XCTAssertFalse(true)
-        }
     }
     
     func testThatCanDecrypt() -> Void {
@@ -112,19 +91,12 @@ class secure_defaultsTests: XCTestCase {
             var decryptedMock : TestMock?
             
             //RSA
-            decryptedMock = try rsaProvider.decrypt(input: encryptedRSAPayload)
+            decryptedMock = try rsaProvider.decrypt(data: encryptedRSAPayload)
             XCTAssertNotNil(decryptedMock)
             
             //ECDSA
             decryptedMock = nil
-            ecProvider.useSecureEnclave = false
-            decryptedMock = try ecProvider.decrypt(input: encryptedECDSAPayload)
-            XCTAssertNotNil(decryptedMock)
-            
-            //ECDSA Secure Enclave
-            decryptedMock = nil
-            ecProvider.useSecureEnclave = true
-            decryptedMock = try ecProvider.decrypt(input: encryptedSecureEnclavePayload)
+            decryptedMock = try ecProvider.decrypt(data: encryptedECDSAPayload)
             XCTAssertNotNil(decryptedMock)
         }
         catch {

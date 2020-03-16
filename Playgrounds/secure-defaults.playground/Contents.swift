@@ -28,49 +28,61 @@ extension Settings : PreferenceDomainType {
     }
 }
 
-
 let p = Settings()
 
-///RSA Provider Encryption Example:
-let provider = RSAEncryption<Settings>()
-do {
-    let val = try provider.encrypt(data: p)
-    try p.save(encrypted: val)
-}
-catch {
-    print(error.localizedDescription)
-}
-
-var payload: String
-
-do {
-    payload = try Settings.encryptedData()
-    let result = try provider.decrypt(data: payload)
-    result.isUser //should be true
-}
-catch {
-    print(error.localizedDescription)
-}
-
-
-///ECDSA Provider Encryption Example:
-let ecProvider = ECDSAEncryption<Settings>()
+let provider = UserDefaultsEncryption<Settings>(.rsa(SecKeyAlgorithm.rsaSignatureDigestPSSSHA512))
 
 do {
     let val = try provider.encrypt(data: p)
     try p.save(encrypted: val)
 }
 catch {
-    print(error.localizedDescription)
+    print(error)
 }
 
-do {
-    payload = try Settings.encryptedData()
-    let result = try provider.decrypt(data: payload)
-    result.isUser // should be true
-}
-catch {
-    print(error.localizedDescription)
-}
+
+//let p = Settings()
+//
+/////RSA Provider Encryption Example:
+//let provider = RSAEncryption<Settings>()
+//do {
+//    let val = try provider.encrypt(data: p)
+//    try p.save(encrypted: val)
+//}
+//catch {
+//    print(error.localizedDescription)
+//}
+//
+//var payload: String
+//
+//do {
+//    payload = try Settings.encryptedData()
+//    let result = try provider.decrypt(data: payload)
+//    result.isUser //should be true
+//}
+//catch {
+//    print(error.localizedDescription)
+//}
+//
+//
+/////ECDSA Provider Encryption Example:
+//let ecProvider = ECDSAEncryption<Settings>(algorithm: SecKeyAlgorithm.ecdsaSignatureDigestX962SHA512, useSecureEnclave: false)
+//
+//do {
+//    let val = try provider.encrypt(data: p)
+//    try p.save(encrypted: val)
+//}
+//catch {
+//    print(error.localizedDescription)
+//}
+//
+//do {
+//    payload = try Settings.encryptedData()
+//    let result = try provider.decrypt(data: payload)
+//    result.isUser // should be true
+//}
+//catch {
+//    print(error.localizedDescription)
+//}
 
 

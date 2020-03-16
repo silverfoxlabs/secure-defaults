@@ -8,13 +8,30 @@
 import Foundation
 
 public enum EncryptionProviderError : Error {
-    
+
     case failure(reason: String)
     case failedEncryption(reason: String)
     case failedDecryption(reason : String)
     case couldNotRetrieveKey
     case couldNotDeleteKeys
     case inputError
+
+    public var localizedDescription: String {
+        switch self {
+        case .failure(reason: let r):
+            return r
+        case .failedEncryption(reason: let r):
+            return r
+        case .failedDecryption(reason: let r):
+            return r
+        case .couldNotRetrieveKey:
+            return "could not retrieve key"
+        case .couldNotDeleteKeys:
+            return "could not delete keys"
+        case .inputError:
+            return "inputError"
+        }
+    }
 }
 
 public struct Reasons {
