@@ -7,6 +7,18 @@
 
 import Foundation
 
+
+
+/// Encrypt & Decrypt User Defaults Values
+/**
+Summary of algortithm using symmetric crypto to encrypt/decrypt
+with assymetric keypair:
+1. Create the private key if it doesn't exist; otherwise fetch it.
+2. Use  public key to encrypt the data - calling
+   SecKeyCreateEncryptedData
+3. Use the private key to decrypt the data - calling:
+   SecKeyCreateDecryptedData
+*/
 public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvider where T: Codable {
 
     var keyType: EncryptionType
@@ -14,7 +26,6 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
     public init(_ config: EncryptionType) {
         keyType = config
     }
-
 
     public func nuke() throws -> Void {
 
@@ -54,11 +65,21 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
         }
     }
 
+
+    /// Encrypting data for User Defaults
+    /// - Parameter input: the data to encrypt.
     public func encrypt(data input: T) throws -> EncryptedType {
 
-        let key = try KeyMaker.fetchPublicKey(tag: T.tag,
-                                              type: kSecAttrKeyTypeRSA,
-                                              name: T.name)
+        //Note: Use public key to encrypt data!
+
+        let key = try KeyMaker.fetch(keyWith: T.tag,
+                                              type: keyType.values().0,
+                                              name: T.name,
+                                              size: keyType.values().2)
+
+
+        print(SecKeyCopyAttributes(key))
+
 
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .xml
@@ -72,9 +93,10 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
             throw EncryptionProviderError.failedEncryption(reason: error.localizedDescription)
         }
 
+        let pKey = try KeyMaker.getPublicKey(key: key)
+
         var unsafe : Unmanaged<CFError>?
-//        let signedPayload = SecKeyCreateSignature(key, .rsaSignatureDigestPSSSHA512, data as CFData, &unsafe)
-        let signedPayload = SecKeyCreateEncryptedData(key,
+        let signedPayload = SecKeyCreateEncryptedData(pKey,
                                                       keyType.values().1,
                                                       data as CFData,
                                                       &unsafe)
@@ -96,13 +118,20 @@ public struct UserDefaultsEncryption<T: PreferenceDomainType>: EncryptionProvide
 
     public func decrypt(data input: String) throws -> T {
 
-        let key = try KeyMaker.fetchPublicKey(tag: T.tag,
-                                              type: keyType.values().0,
-                                              name: T.name)
-        let data = input.data(using: .utf8)!
+        //Note: Decrypt data with Private Key!
 
+        let key = try KeyMaker.fetch(keyWith: T.tag,
+                                              type: keyType.values().0,
+                                              name: T.name,
+                                              size: keyType.values().2)
+
+        let data = input.data(using: .utf8)! as CFData
         var error : Unmanaged<CFError>?
-        guard let result = SecKeyCreateDecryptedData(key, keyType.values().1, data as CFData, &error) else { throw EncryptionProviderError.failure(reason: "Could not decrypt data using the cryptographic key.")}
+        let algo = keyType.values().1
+        guard let result = SecKeyCreateDecryptedData(key, algo, data, &error) else {
+            print("DecryptedData == nil")
+            throw EncryptionProviderError.failure(reason: error?.takeRetainedValue().localizedDescription ?? "No error provided by the Security Framework.")
+        }
 
         let decoder = PropertyListDecoder()
         let retVal = try decoder.decode(T.self, from: result as Data)

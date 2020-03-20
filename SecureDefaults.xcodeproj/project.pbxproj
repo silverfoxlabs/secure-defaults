@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		664B42EF241CF73B00334BF8 /* KeyMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664B42EE241CF73B00334BF8 /* KeyMaker.swift */; };
+		666C3F702421958B00324328 /* SecKeyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666C3F6F2421958B00324328 /* SecKeyHelper.swift */; };
 		66BA1717241E3DA3007407AB /* UserDefaultsEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BA1716241E3DA3007407AB /* UserDefaultsEncryption.swift */; };
 		66BA1719241E4236007407AB /* EncryptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BA1718241E4236007407AB /* EncryptionType.swift */; };
 		OBJ_32 /* EncryptionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* EncryptionProvider.swift */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		664B42EE241CF73B00334BF8 /* KeyMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyMaker.swift; sourceTree = "<group>"; };
+		666C3F6F2421958B00324328 /* SecKeyHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecKeyHelper.swift; sourceTree = "<group>"; };
 		66BA1716241E3DA3007407AB /* UserDefaultsEncryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsEncryption.swift; sourceTree = "<group>"; };
 		66BA1718241E4236007407AB /* EncryptionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionType.swift; sourceTree = "<group>"; };
 		OBJ_10 /* EncryptionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProvider.swift; sourceTree = "<group>"; };
@@ -64,7 +66,7 @@
 		OBJ_25 /* secure-defaults.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "secure-defaults.podspec"; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		"SecureDefaults::SecureDefaults::Product" /* SecureDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecureDefaults.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"SecureDefaults::SecureDefaultsTests::Product" /* SecureDefaultsTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SecureDefaultsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"SecureDefaults::SecureDefaultsTests::Product" /* SecureDefaultsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = SecureDefaultsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 				66BA1716241E3DA3007407AB /* UserDefaultsEncryption.swift */,
 				66BA1718241E4236007407AB /* EncryptionType.swift */,
 				664B42EE241CF73B00334BF8 /* KeyMaker.swift */,
+				666C3F6F2421958B00324328 /* SecKeyHelper.swift */,
 			);
 			name = SecureDefaults;
 			path = Sources/SecureDefaults;
@@ -206,7 +209,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 9999;
-				LastUpgradeCheck = 9999;
+				LastUpgradeCheck = 1130;
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "SecureDefaults" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -235,6 +238,7 @@
 			files = (
 				66BA1719241E4236007407AB /* EncryptionType.swift in Sources */,
 				OBJ_32 /* EncryptionProvider.swift in Sources */,
+				666C3F702421958B00324328 /* SecKeyHelper.swift in Sources */,
 				OBJ_33 /* EncryptionProviderError.swift in Sources */,
 				OBJ_34 /* PreferenceDomainType.swift in Sources */,
 				66BA1717241E3DA3007407AB /* UserDefaultsEncryption.swift in Sources */,
@@ -334,17 +338,43 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"SWIFT_PACKAGE=1",
 					"DEBUG=1",
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
@@ -361,15 +391,40 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"SWIFT_PACKAGE=1",
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -414,8 +469,8 @@
 		OBJ_51 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -439,8 +494,8 @@
 		OBJ_52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",

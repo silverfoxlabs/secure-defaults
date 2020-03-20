@@ -26,8 +26,8 @@ class secure_defaultsTests: XCTestCase {
     
     var didRegisterMock = false
     
-    var rsaProvider = UserDefaultsEncryption<TestMock>( EncryptionType.rsa(.rsaSignatureDigestPSSSHA512))
-    var ecProvider = UserDefaultsEncryption<TestMock>(EncryptionType.ecdsa(.ecdsaSignatureDigestX962SHA512))
+    var rsaProvider = UserDefaultsEncryption<TestMock>( EncryptionType.rsa(.rsaEncryptionOAEPSHA512AESGCM))
+    var ecProvider = UserDefaultsEncryption<TestMock>(EncryptionType.ecdsa(.eciesEncryptionCofactorX963SHA256AESGCM))
     
     var encryptedRSAPayload = ""
     var encryptedECDSAPayload = ""
@@ -58,7 +58,7 @@ class secure_defaultsTests: XCTestCase {
     func testThatCanEncrypt() -> Void {
         
         let mock = TestMock(name: "Luke Skywalker", age: 35, rememberMe: true)
-        let rsaProvider = UserDefaultsEncryption<TestMock>(.rsa(.rsaSignatureDigestPSSSHA512))
+        let rsaProvider = UserDefaultsEncryption<TestMock>(.rsa(.rsaEncryptionOAEPSHA512AESGCM))
         
         do {
             let result = try rsaProvider.encrypt(data: mock)
@@ -70,7 +70,7 @@ class secure_defaultsTests: XCTestCase {
             XCTAssertFalse(true)
         }
         
-        let ecProvider = UserDefaultsEncryption<TestMock>(.ecdsa(.ecdsaSignatureDigestX962SHA512))
+        let ecProvider = UserDefaultsEncryption<TestMock>(.ecdsa(.eciesEncryptionCofactorX963SHA256AESGCM))
         
         do {
             let result = try ecProvider.encrypt(data: mock)
